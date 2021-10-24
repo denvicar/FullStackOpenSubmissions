@@ -1,0 +1,8 @@
+note over browser:
+the browser executes js code to add
+the new note, preventing the default
+behavior of the form and updating
+the view
+end note
+browser->server: HTTP POST https://studies.cs.helsinki.fi/exampleapp/new_note_spa
+server-->browser: HTTP 201 (Created)
