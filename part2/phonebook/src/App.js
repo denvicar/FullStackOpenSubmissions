@@ -12,9 +12,14 @@ const App = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault()
-    const newPerson = {name: newName}
-    setPersons(persons.concat(newPerson))
-    setNewName('')
+    if(persons.map(p=>p.name).includes(newName)) {
+      alert(`${newName} already exists!`)
+      setNewName('')
+    } else {
+      const newPerson = {name: newName}
+      setPersons(persons.concat(newPerson))
+      setNewName('')
+    }
   }
 
   return (
