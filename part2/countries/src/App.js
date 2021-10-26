@@ -26,14 +26,14 @@ function App() {
     setSelected(index)
   }
 
-  let countriesToShow = countries.filter(n=>n.name.common.toLowerCase().includes(search.toLowerCase()))
 
-  if(selected!==null) countriesToShow=[countriesToShow[selected]]
+
+
 
   return (
     <div>
       find countries: <input onChange={handleChange} value={search} />
-      <CountryList countries={countriesToShow} handler={handleSelected} />
+      <CountryList countries={countries} searchTerm={search} handler={handleSelected} selected={selected}/>
     </div>
   )
 }

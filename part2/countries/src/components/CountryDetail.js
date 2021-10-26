@@ -1,8 +1,10 @@
 import React from "react";
+import Weather from "./Weather"
 
 const CountryDetail = ({country})=>{
+    if(!!country) {
 
-    return (
+    return  (
         <div>
             <h1>{country.name.common}</h1>
             <p>capital {country.capital[0]}</p>
@@ -14,8 +16,15 @@ const CountryDetail = ({country})=>{
             </ul>
 
             <img src={country.flags.png} alt="flag" />
+
+            <Weather capital={country.capital[0]} />
+            {/* <h2>Weather in {country.capital[0]}</h2>
+            <p><strong>temperature:</strong> {weather.current.temperature} Celsius</p>
+            <img src={weather.current.weatherIcons[0]} alt="icon" />
+            <p><strong>wind:</strong> {weather.current.wind_speed} mph direction {weather.current.wind_dir}</p> */}
         </div>
     )
+        } else return <p></p>
 }
 
 export default CountryDetail
