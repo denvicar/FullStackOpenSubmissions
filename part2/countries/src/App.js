@@ -5,6 +5,7 @@ import CountryList from './components/CountryList'
 function App() {
   const [countries, setCountries] = useState([])
   const [search, setSearch] = useState('')
+  const [selected,setSelected] = useState()
 
   useEffect(()=>{
     axios
@@ -16,17 +17,23 @@ function App() {
   },[])
 
   const handleChange = (event) => {
+    setSelected(null)
     setSearch(event.target.value)
   }
 
-  const countriesToShow = countries.filter(n=>n.name.common.toLowerCase().includes(search.toLowerCase()))
+  const handleSelected = (index) => {
+    console.log("selezionato paese ",index)
+    setSelected(index)
+  }
 
+  let countriesToShow = countries.filter(n=>n.name.common.toLowerCase().includes(search.toLowerCase()))
 
+  if(selected!==null) countriesToShow=[countriesToShow[selected]]
 
   return (
     <div>
       find countries: <input onChange={handleChange} value={search} />
-      <CountryList countries={countriesToShow} />
+      <CountryList countries={countriesToShow} handler={handleSelected} />
     </div>
   )
 }

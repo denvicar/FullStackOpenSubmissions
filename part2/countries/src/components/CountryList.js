@@ -1,14 +1,22 @@
-import React from "react";
 import CountryDetail from "./CountryDetail";
 
-const CountryList = ({countries}) => {
+const CountryList = ({countries,handler}) => {
+
+    const getElementToShow = () => {
+        if(countries.length===1)
+            return <CountryDetail country={countries[0]} />
+        else if (countries.length>10)
+            return <p>Too many matches, specify another filter</p>
+        else
+            return countries.map((c,i)=>{
+                return (
+                    <p key={c.name.common}>{c.name.common}<button onClick={()=>handler(i)}>show</button></p> 
+                )})
+    }
+
     return (
         <div>
-            {countries.length>10
-                ? <p>Too many matches, specify another filter</p>
-                : countries.length===1
-                ? <CountryDetail country={countries[0]} />
-                : countries.map(c=><p key={c.name.common}>{c.name.common}</p>)}
+            {getElementToShow()}
         </div>
     )
 }
