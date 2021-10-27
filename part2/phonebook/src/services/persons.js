@@ -4,7 +4,10 @@ const baseUrl="http://localhost:3001/persons"
 const getAll = () => {
     return axios
         .get(baseUrl)
-        .then(res=>res.data)
+        .then(res=>{
+            console.log(res)
+            return res.data
+        })
 }
 
 const addPerson = (newPerson) => {

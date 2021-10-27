@@ -15,7 +15,10 @@ const App = () => {
 
   useEffect(()=>{
     personService
-      .getAll(initialPersons=>setPersons(initialPersons))
+      .getAll()
+      .then(initialPersons=> {
+        setPersons(initialPersons)
+      })
   },[])
 
 
@@ -64,6 +67,7 @@ const App = () => {
               }, 5000);
               setNewName('')
               setNewNumber('')
+              setPersons(persons.filter(p=>p.id!==existingPerson.id))
             })
             
         } else {
@@ -100,6 +104,14 @@ const App = () => {
           setType('completion')
           setMessage(`${persons[index].name} deleted with success`)
           setTimeout(()=>setMessage(null),5000)
+        })
+        .catch(error=>{
+          setType('error')
+          setMessage(`Information of ${persons[index].name} has already been deleted`)
+          setTimeout(() => {
+            setMessage(null)
+          }, 5000);
+          setPersons(persons.filter(p=>p.id!==persons[index].id))
         })
     }
   }
