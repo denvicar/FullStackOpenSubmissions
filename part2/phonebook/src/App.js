@@ -30,10 +30,26 @@ const App = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault()
-    if(persons.map(p=>p.name).includes(newName)) {
-      alert(`${newName} already exists!`)
-      setNewName('')
-      setNewNumber('')
+    const existingPerson = persons.find(p=>p.name.toLowerCase()===newName.toLowerCase())
+    if(!!existingPerson) {
+      if(existingPerson.number===newNumber) {
+        alert(`${newName} already exists!`)
+        setNewName('')
+        setNewNumber('')
+      } else {
+        if(window.confirm(`${newName} already exists! Do you want to update the number?`)) {
+          const newPerson = {name: newName, number: newNumber}
+          personService
+            .updatePerson(existingPerson.id,newPerson)
+            .then(updatedPerson=>{
+              setPersons(persons.map(p=>p.id===existingPerson.id ? updatedPerson : p))
+            })
+        } else {
+          setNewName('')
+          setNewNumber('')
+        }
+      }
+      
     } else {
       const newPerson = {name: newName, number: newNumber}
       personService
@@ -45,12 +61,14 @@ const App = () => {
   }
 
   const handleDeleteOf = (id) => {
-    personService
-      .deletePerson(id)
-      .then(r=>{
-        console.log(r)
-        setPersons(persons.filter(p=>p.id !== id))
-      })
+    if(window.confirm("Are you sure you want to delete this person?")){
+      personService
+        .deletePerson(id)
+        .then(r=>{
+          console.log(r)
+          setPersons(persons.filter(p=>p.id !== id))
+        })
+    }
   }
 
   const personsToShow = searchTerm!=='' ?
