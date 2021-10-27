@@ -3,12 +3,15 @@ import Filter from './components/Filter'
 import NewUserForm from './components/NewUserForm'
 import ContactList from './components/ContactList'
 import personService from './services/persons'
+import Notification from './components/Notification'
 
 const App = () => {
   const [ persons, setPersons ] = useState([]) 
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber] = useState('')
   const [ searchTerm, setSearchTerm] = useState('')
+  const [ message, setMessage ] = useState(null)
+  const [type,setType] = useState('error')
 
   useEffect(()=>{
     personService
@@ -33,7 +36,9 @@ const App = () => {
     const existingPerson = persons.find(p=>p.name.toLowerCase()===newName.toLowerCase())
     if(!!existingPerson) {
       if(existingPerson.number===newNumber) {
-        alert(`${newName} already exists!`)
+        setType('error')
+        setMessage(`${newName} already exists!`)
+        setTimeout(()=>setMessage(null),5000)
         setNewName('')
         setNewNumber('')
       } else {
@@ -43,7 +48,24 @@ const App = () => {
             .updatePerson(existingPerson.id,newPerson)
             .then(updatedPerson=>{
               setPersons(persons.map(p=>p.id===existingPerson.id ? updatedPerson : p))
+              setType('completion')
+              setMessage(`${newName} updated with new number`)
+              setTimeout(() => {
+                setMessage(null)
+              }, 5000);
+              setNewName('')
+              setNewNumber('')
             })
+            .catch(error=>{
+              setType('error')
+              setMessage(`Information of ${newName} has already been deleted`)
+              setTimeout(() => {
+                setMessage(null)
+              }, 5000);
+              setNewName('')
+              setNewNumber('')
+            })
+            
         } else {
           setNewName('')
           setNewNumber('')
@@ -54,19 +76,30 @@ const App = () => {
       const newPerson = {name: newName, number: newNumber}
       personService
         .addPerson(newPerson)
-        .then(personAdded=>setPersons(persons.concat(personAdded)))
-      setNewName('')
-      setNewNumber('')
+        .then(personAdded=>{
+          setPersons(persons.concat(personAdded))
+          setType('completion')
+          setMessage(`Added new person, ${newPerson.name}`)
+          setTimeout(() => {
+            setMessage(null)
+          }, 5000);
+          setNewName('')
+          setNewNumber('')
+        })
+      
     }
   }
 
-  const handleDeleteOf = (id) => {
-    if(window.confirm("Are you sure you want to delete this person?")){
+  const handleDeleteOf = (index) => {
+    if(window.confirm(`Are you sure you want to delete ${persons[index].name}`)){
       personService
-        .deletePerson(id)
+        .deletePerson(persons[index].id)
         .then(r=>{
           console.log(r)
-          setPersons(persons.filter(p=>p.id !== id))
+          setPersons(persons.filter(p=>p.id !== persons[index].id))
+          setType('completion')
+          setMessage(`${persons[index].name} deleted with success`)
+          setTimeout(()=>setMessage(null),5000)
         })
     }
   }
@@ -78,6 +111,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={message} type={type} />
       <Filter term={searchTerm} handler={handleSearch} />
       <h2>add a new</h2>
       <NewUserForm

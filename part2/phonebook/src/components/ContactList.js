@@ -7,7 +7,7 @@ const Contact = ({name, number, handler}) => {
 const ContactList = ({persons, onDelete}) => {
     return (
         <>
-            {persons.map(p=><Contact key={p.id} name={p.name} number={p.number} handler={()=>onDelete(p.id)} />)}
+            {persons.map((p,i)=><Contact key={p.id} name={p.name} number={p.number} handler={()=>onDelete(i)} />)}
         </>
     )
 }
