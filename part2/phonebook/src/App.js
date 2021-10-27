@@ -44,6 +44,15 @@ const App = () => {
     }
   }
 
+  const handleDeleteOf = (id) => {
+    personService
+      .deletePerson(id)
+      .then(r=>{
+        console.log(r)
+        setPersons(persons.filter(p=>p.id !== id))
+      })
+  }
+
   const personsToShow = searchTerm!=='' ?
     persons.filter(p=>p.name.toLowerCase().includes(searchTerm.toLowerCase())) :
     persons;
@@ -61,7 +70,7 @@ const App = () => {
         handleSubmit={handleSubmit}
       />
       <h2>Numbers</h2>
-      <ContactList persons={personsToShow} />
+      <ContactList persons={personsToShow} onDelete={handleDeleteOf} />
     </div>
   )
 }

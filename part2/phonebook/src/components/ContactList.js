@@ -1,13 +1,13 @@
 import React from 'react'
 
-const Contact = ({name, number}) => {
-    return <p>{name} {number}</p>
+const Contact = ({name, number, handler}) => {
+    return <p>{name} {number} <button onClick={handler}>delete</button></p>
 }
 
-const ContactList = ({persons}) => {
+const ContactList = ({persons, onDelete}) => {
     return (
         <>
-            {persons.map(p=><Contact key={p.name} name={p.name} number={p.number} />)}
+            {persons.map(p=><Contact key={p.id} name={p.name} number={p.number} handler={()=>onDelete(p.id)} />)}
         </>
     )
 }
